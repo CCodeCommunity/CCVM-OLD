@@ -24,7 +24,15 @@ namespace CCVM
 
             CCVM.Run();
 
+            Console.WriteLine("");
             CCVM.PrintStack();
+
+            Console.WriteLine("");
+            CCVM.PrintRegs();
+
+            Console.WriteLine("");
+            CCVM.PrintMem();
+
         }
     }
 }
