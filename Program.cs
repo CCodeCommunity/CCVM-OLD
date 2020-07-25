@@ -15,7 +15,7 @@ namespace CCVM
             }
 
             // open the executable
-            List<byte> program = FileParser.Parse(args[0]);
+            byte[] program = FileParser.Parse(args[0]);
 
             VM CCVM = new VM();
 

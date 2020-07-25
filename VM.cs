@@ -1,31 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
 
 namespace CCVM
 {
     class VM
     {
-        private List<byte> program;
+        private byte[] program;
         private Stack<UInt32> stack = new Stack<UInt32>();
         private UInt32[] memory;
 
         private byte exit = 0;
 
-        private UInt32 PC = 0; // program counter
-        private UInt32 SP = 0; // stack pointer
+        private Int32 PC = 0; // program counter
+        private Int32 SP = 0; // stack pointer
 
         private byte instruction;
 
         private UInt32 Fetch32()
         {
             UInt32 V = 0;
-
-            for (int i = 0; i < 4; i++)
+            byte[] bytes = new byte[4];
+            Array.Copy(program, PC, bytes, 0, 4);
+            PC += 4;
+            foreach (byte b in bytes)
             {
-                V += program[(int)PC++];
-                if (i != 3)
-                    V <<= 8;
+                V <<= 8;
+                V += b;
             }
 
             return V;
@@ -33,7 +34,7 @@ namespace CCVM
 
         private void Fetch()
         {
-            instruction = program[(int)PC++]; // fetch the instruction
+            instruction = program[PC++]; // fetch the instruction
         }
 
         private void Execute()
@@ -50,8 +51,7 @@ namespace CCVM
                 case 0x01:
                     {
                         Console.WriteLine("Pusing literal to stack");
-                        UInt32 Val = Fetch32();
-                        stack.Push(Val);
+                        stack.Push(Fetch32());
                         break;
                     }
             }
@@ -67,7 +67,7 @@ namespace CCVM
             } 
         }
 
-        public void LoadProgram(List<byte> program)
+        public void LoadProgram(byte[] program)
         {
             this.program = program;
         }
