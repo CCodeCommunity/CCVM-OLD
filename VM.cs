@@ -13,7 +13,6 @@ namespace CCVM
         private byte exit = 0;
 
         private Int32 PC = 0; // program counter
-        private Int32 SP = 0; // stack pointer
 
         private byte instruction;
 
@@ -42,18 +41,22 @@ namespace CCVM
             switch (instruction)
             {
                 case 0x00:
-                    {
-                        Console.WriteLine("Exit");
-                        exit = 1;
-                        PC++;
-                        break;
-                    }
+                    Console.WriteLine("Exit");
+                    exit = 1;
+                    PC++;
+                    break;
                 case 0x01:
+                    Console.WriteLine("Pusing literal to stack");
+                    stack.Push(Fetch32());
+                    break;
+                case 0x02: // math
+                    switch (program[PC++]) // stack add
                     {
-                        Console.WriteLine("Pusing literal to stack");
-                        stack.Push(Fetch32());
-                        break;
+                        case 0x01:
+                            stack.Push(stack.Pop() + stack.Pop());
+                            break;
                     }
+                    break;
             }
         }
 
