@@ -76,19 +76,32 @@ namespace CCVM
                     Console.WriteLine("Pusing literal to stack");
                     stack.Push(Fetch32());
                     break;
-                case 0x02: // [opcode(1) register(1) literal(4)] 6b
+                case 0x02: // [opcode(1) register(1)] 2b
+                    Console.WriteLine("popping to register");
+                    SetRegister(program[PC++], stack.Pop());
+                    break;
+                case 0x03: // [opcode(1) address(4)] 5b
+                    Console.WriteLine("popping to memory");
+                    SetMemory(Fetch32(), stack.Pop());
+                    break;
+                case 0x04: // [opcode(1)] 1b
+                    Console.WriteLine("duping stack");
+                    stack.Push(stack.Peek());
+                    break;
+
+                case 0x05: // [opcode(1) register(1) literal(4)] 6b
                     Console.WriteLine("Moving literal to register");
                     SetRegister(program[PC++], Fetch32());
                     break;
-                case 0x03: // [opcode(1) address(4) literal(4)] 9b
+                case 0x06: // [opcode(1) address(4) literal(4)] 9b
                     Console.WriteLine("Moving literal to memory");
                     SetMemory(Fetch32(), Fetch32());
                     break;
-                case 0x04: // [opcode(1) register(1) address(4)] 6b
+                case 0x07: // [opcode(1) register(1) address(4)] 6b
                     Console.WriteLine("Moving memory to register");
                     SetRegister(program[PC++], GetMemory(Fetch32()));
                     break;
-                case 0x05: // [opcode(1) address(4) register(1)] 6b
+                case 0x08: // [opcode(1) address(4) register(1)] 6b
                     Console.WriteLine("Moving register to address");
                     SetMemory(Fetch32(), GetRegister(program[PC++]));
                     break;
