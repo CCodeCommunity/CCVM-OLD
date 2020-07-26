@@ -63,47 +63,110 @@ namespace CCVM
             instruction = program[PC++]; // fetch the instruction
         }
 
+        // [opcode(1)]
+        private void OpcodeExit()
+        {
+            Console.WriteLine("Exit");
+            exit = 1;
+            PC++;
+        }
+
+        // [opcode(1) literal(4)] 5b
+        private void OpcodePushLit()
+        {
+            Console.WriteLine("Pusing literal to stack");
+            stack.Push(Fetch32());
+        }
+
+        // [opcode(1) literal(4)] 5b
+        private void OpcodePushReg() // !
+        {
+            Console.WriteLine("Pusing register to stack");
+            stack.Push(GetRegister(program[PC++]));
+        }
+
+        // [opcode(1) register(1)] 2b
+        private void OpcodePopReg()
+        {
+            Console.WriteLine("popping to register");
+            SetRegister(program[PC++], stack.Pop());
+        }
+
+        // [opcode(1) address(4)] 5b
+        private void OpcodePopMemory()
+        {
+            Console.WriteLine("popping to memory");
+            SetMemory(Fetch32(), stack.Pop());
+        }
+
+        // [opcode(1)] 1b
+        private void OpcodeDup()
+        {
+            Console.WriteLine("duping stack");
+            stack.Push(stack.Peek());
+        }
+
+        // [opcode(1) register(1) literal(4)] 6b
+        private void OpcodeMovLitReg()
+        {
+            Console.WriteLine("Moving literal to register");
+            SetRegister(program[PC++], Fetch32());
+        }
+
+        // [opcode(1) address(4) literal(4)] 9b
+        private void OpcodeMovRegLit()
+        {
+            Console.WriteLine("Moving literal to memory");
+            SetMemory(Fetch32(), Fetch32());
+        }
+
+        // [opcode(1) register(1) address(4)] 6b
+        private void OpcodeMovAdrressReg()
+        {
+            Console.WriteLine("Moving address to register");
+            SetRegister(program[PC++], GetMemory(Fetch32()));
+        }
+
+        // [opcode(1) address(4) register(1)] 6b
+        private void OpcodeMovRegAdrress()
+        {
+            Console.WriteLine("Moving register to address");
+            SetMemory(Fetch32(), GetRegister(program[PC++]));
+        }
+
         private void Execute()
         {
             switch (instruction)
             {
-                case 0x00: // [opcode(1)]
-                    Console.WriteLine("Exit");
-                    exit = 1;
-                    PC++;
+                case 0x00: 
+                    OpcodeExit();
                     break;
-                case 0x01: // [opcode(1) literal(4)] 5b
-                    Console.WriteLine("Pusing literal to stack");
-                    stack.Push(Fetch32());
+                case 0x01: 
+                    OpcodePushLit();
                     break;
-                case 0x02: // [opcode(1) register(1)] 2b
-                    Console.WriteLine("popping to register");
-                    SetRegister(program[PC++], stack.Pop());
+                case 0x02:
+                    OpcodePushReg();
                     break;
-                case 0x03: // [opcode(1) address(4)] 5b
-                    Console.WriteLine("popping to memory");
-                    SetMemory(Fetch32(), stack.Pop());
+                case 0x03: 
+                    OpcodePopReg();
                     break;
-                case 0x04: // [opcode(1)] 1b
-                    Console.WriteLine("duping stack");
-                    stack.Push(stack.Peek());
+                case 0x04: 
+                    OpcodePopMemory();
                     break;
-
-                case 0x05: // [opcode(1) register(1) literal(4)] 6b
-                    Console.WriteLine("Moving literal to register");
-                    SetRegister(program[PC++], Fetch32());
+                case 0x05: 
+                    OpcodeDup();
                     break;
-                case 0x06: // [opcode(1) address(4) literal(4)] 9b
-                    Console.WriteLine("Moving literal to memory");
-                    SetMemory(Fetch32(), Fetch32());
+                case 0x06: 
+                    OpcodeMovLitReg();
                     break;
-                case 0x07: // [opcode(1) register(1) address(4)] 6b
-                    Console.WriteLine("Moving memory to register");
-                    SetRegister(program[PC++], GetMemory(Fetch32()));
+                case 0x07: 
+                    OpcodeMovRegLit();
                     break;
-                case 0x08: // [opcode(1) address(4) register(1)] 6b
-                    Console.WriteLine("Moving register to address");
-                    SetMemory(Fetch32(), GetRegister(program[PC++]));
+                case 0x08: 
+                    OpcodeMovAdrressReg();
+                    break;
+                case 0x09: 
+                    OpcodeMovRegAdrress();
                     break;
             }
         }
