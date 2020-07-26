@@ -107,28 +107,28 @@ namespace CCVM
         }
 
         // [opcode(1) register(1) literal(4)] 6b
-        private void OpcodeMovLitReg()
+        private void OpcodeMovLitToReg()
         {
             Console.WriteLine("Moving literal to register");
             SetRegister(program[PC++], Fetch32());
         }
 
         // [opcode(1) address(4) literal(4)] 9b
-        private void OpcodeMovRegLit()
+        private void OpcodeMovLitToMem()
         {
             Console.WriteLine("Moving literal to memory");
             SetMemory(Fetch32(), Fetch32());
         }
 
         // [opcode(1) register(1) address(4)] 6b
-        private void OpcodeMovAdrressReg()
+        private void OpcodeMovAddressToReg()
         {
             Console.WriteLine("Moving address to register");
             SetRegister(program[PC++], GetMemory(Fetch32()));
         }
 
         // [opcode(1) address(4) register(1)] 6b
-        private void OpcodeMovRegAdrress()
+        private void OpcodeMovRegToAddress()
         {
             Console.WriteLine("Moving register to address");
             SetMemory(Fetch32(), GetRegister(program[PC++]));
@@ -156,17 +156,17 @@ namespace CCVM
                 case 0x05: 
                     OpcodeDup();
                     break;
-                case 0x06: 
-                    OpcodeMovLitReg();
+                case 0x06:
+                    OpcodeMovLitToReg();
                     break;
                 case 0x07: 
-                    OpcodeMovRegLit();
+                    OpcodeMovLitToMem();
                     break;
-                case 0x08: 
-                    OpcodeMovAdrressReg();
+                case 0x08:
+                    OpcodeMovAddressToReg();
                     break;
-                case 0x09: 
-                    OpcodeMovRegAdrress();
+                case 0x09:
+                    OpcodeMovRegToAddress();
                     break;
             }
         }
