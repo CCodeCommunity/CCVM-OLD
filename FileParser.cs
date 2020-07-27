@@ -7,10 +7,14 @@ namespace CCVM
 {
     class FileParser
     {
-        public static byte[] Parse(string FileName)
+        public static byte[] ParseBytes(string FileName)
         {
-            byte[] program = File.ReadAllBytes(FileName);
-            return program;
+            return File.ReadAllBytes(FileName);
+        }
+
+        public static string ParseString(string FileName)
+        {
+            return File.ReadAllText(FileName);
         }
     }
 }
