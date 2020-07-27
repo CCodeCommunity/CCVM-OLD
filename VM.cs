@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CCVM
 {
-    sealed class VM
+    sealed partial class VM
     {
         private enum Registers
         { 
@@ -63,137 +63,6 @@ namespace CCVM
             instruction = program[PC++]; // fetch the instruction
         }
 
-        // [opcode(1)]
-        private void OpcodeExit()
-        {
-            Console.WriteLine("Exit");
-            exit = 1;
-            PC++;
-        }
-
-        // [opcode(1) literal(4)] 5b
-        private void OpcodePushLit()
-        {
-            Console.WriteLine("Pusing literal to stack");
-            stack.Push(Fetch32());
-        }
-
-        // [opcode(1) register(1)] 2b
-        private void OpcodePushReg() // !
-        {
-            Console.WriteLine("Pusing register to stack");
-            stack.Push(GetRegister(program[PC++]));
-        }
-
-        // [opcode(1) register(1)] 2b
-        private void OpcodePopReg()
-        {
-            Console.WriteLine("popping to register");
-            SetRegister(program[PC++], stack.Pop());
-        }
-
-        // [opcode(1) address(4)] 5b
-        private void OpcodePopMemory()
-        {
-            Console.WriteLine("popping to memory");
-            SetMemory(Fetch32(), stack.Pop());
-        }
-
-        // [opcode(1)] 1b
-        private void OpcodeDup()
-        {
-            Console.WriteLine("duping stack");
-            stack.Push(stack.Peek());
-        }
-
-        // [opcode(1) register(1) literal(4)] 6b
-        private void OpcodeMovLitToReg()
-        {
-            Console.WriteLine("Moving literal to register");
-            SetRegister(program[PC++], Fetch32());
-        }
-
-        // [opcode(1) address(4) literal(4)] 9b
-        private void OpcodeMovLitToMem()
-        {
-            Console.WriteLine("Moving literal to memory");
-            SetMemory(Fetch32(), Fetch32());
-        }
-
-        // [opcode(1) register(1) address(4)] 6b
-        private void OpcodeMovAddressToReg()
-        {
-            Console.WriteLine("Moving address to register");
-            SetRegister(program[PC++], GetMemory(Fetch32()));
-        }
-
-        // [opcode(1) address(4) register(1)] 6b
-        private void OpcodeMovRegToAddress()
-        {
-            Console.WriteLine("Moving register to address");
-            SetMemory(Fetch32(), GetRegister(program[PC++]));
-        }
-
-        // [opcode(1) register(1) register(1)] 3b
-        private void OpcodeAddReg()
-        {
-            Console.WriteLine("adding registers");
-            byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) + GetRegister(program[PC++]));
-        }
-
-        // [opcode(1) register(1) register(1)] 3b
-        private void OpcodeSubReg()
-        {
-            Console.WriteLine("subtracting registers");
-            byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) - GetRegister(program[PC++]));
-        }
-
-        // [opcode(1) register(1) register(1)] 3b
-        private void OpcodeDivReg()
-        {
-            Console.WriteLine("dividing registers");
-            byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) - GetRegister(program[PC++]));
-        }
-
-        // [opcode(1) register(1) register(1)] 3b
-        private void OpcodeMulReg()
-        {
-            Console.WriteLine("multiplying registers");
-            byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) - GetRegister(program[PC++]));
-        }
-
-        // [opcode(1)] 1b
-        private void OpcodeAddStack()
-        {
-            Console.WriteLine("adding stack");
-            stack.Push(stack.Pop() + stack.Pop());
-        }
-
-        // [opcode(1)] 1b
-        private void OpcodeSubStack()
-        {
-            Console.WriteLine("adding stack");
-            stack.Push(stack.Pop() - stack.Pop());
-        }
-
-        // [opcode(1)] 1b
-        private void OpcodeDivStack()
-        {
-            Console.WriteLine("adding stack");
-            stack.Push(stack.Pop() / stack.Pop());
-        }
-
-        // [opcode(1)] 1b
-        private void OpcodeMulStack()
-        {
-            Console.WriteLine("adding stack");
-            stack.Push(stack.Pop() * stack.Pop());
-        }
-
         private void Execute()
         {
             switch (instruction)
@@ -228,7 +97,6 @@ namespace CCVM
                 case 0x09:
                     OpcodeMovRegToAddress();
                     break;
-
                 case 0x10:
                     OpcodeAddReg();
                     break;
@@ -252,6 +120,30 @@ namespace CCVM
                     break;
                 case 0x17:
                     OpcodeDivStack();
+                    break;
+                case 0x18:
+                    OpcodeNotReg();
+                    break;
+                case 0x19:
+                    OpcodeNotStack();
+                    break;
+                case 0x1a:
+                    OpcodeAndReg();
+                    break;
+                case 0x1b:
+                    OpcodeAndStack();
+                    break;
+                case 0x1c:
+                    OpcodeOrReg();
+                    break;
+                case 0x1d:
+                    OpcodeOrStack();
+                    break;
+                case 0x1e:
+                    OpcodeXorReg();
+                    break;
+                case 0x1f:
+                    OpcodeXorStack();
                     break;
             }
         }
