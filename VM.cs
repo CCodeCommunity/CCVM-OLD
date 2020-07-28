@@ -145,6 +145,9 @@ namespace CCVM
                 case 0x1f:
                     OpcodeXorStack();
                     break;
+                case 0xff:
+                    OpcodeSyscall();
+                    break;
             }
         }
 

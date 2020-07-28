@@ -27,7 +27,7 @@ namespace CCVM
                 CCVM.Initialize(1000);
 
                 CCVM.Run();
-
+                /*
                 Console.WriteLine("");
                 CCVM.PrintStack();
 
@@ -36,6 +36,7 @@ namespace CCVM
 
                 Console.WriteLine("");
                 CCVM.PrintMem();
+                */
             }
             
             // assemble the cc assembly

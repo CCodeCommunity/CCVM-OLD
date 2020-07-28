@@ -495,6 +495,9 @@ namespace CCVM.CCAssembler
                             TC += 3;
                         }
                         break;
+                    case "syscall":
+                        bytecode.Add(0xff);
+                        break;
                 }
             }
 
