@@ -34,6 +34,7 @@ namespace CCVM.CCAssembler
                 Token ret = new Token();
                 ret.Value = Value;
                 ret.Type = Type;
+                ret.LineFound = LineFound;
                 return ret;
             }
 
@@ -125,6 +126,7 @@ namespace CCVM.CCAssembler
                         {
                             CurrTok.Type = TokenType.Register;
                         }
+                        CurrTok.LineFound = LineCount;
                         Tokens.Add(CurrTok.Clone());
                         CurrTok.Reset();
                     }
@@ -272,7 +274,6 @@ namespace CCVM.CCAssembler
                         {
                             bytecode.Add(0x09);
 
-                            
                             byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
                             Array.Reverse(address);
                             bytecode.AddRange(address);
@@ -280,6 +281,219 @@ namespace CCVM.CCAssembler
                             bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
                         }
                         TC += 3;
+                        break;
+                    case "add":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x11);
+                            
+                        }
+
+                        else
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC+1]);
+                            if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x10);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                                bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not add {Tokens[TC].Type} with {Tokens[TC + 2].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 3;
+                        }
+                        break;
+                    case "sub":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x13);
+
+                        }
+
+                        else
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x12);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                                bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not subtract {Tokens[TC].Type} with {Tokens[TC + 2].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 3;
+                        }
+                        break;
+                    case "mul":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x15);
+                        }
+
+                        else
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x14);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                                bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not multiply {Tokens[TC].Type} with {Tokens[TC + 2].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 3;
+                        }
+                        break;
+                    case "div":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x17);
+
+                        }
+
+                        else
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x16);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                                bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not divide {Tokens[TC].Type} with {Tokens[TC + 2].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 3;
+                        }
+                        break;
+                    case "not":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x19);
+
+                        }
+
+                        else
+                        {
+                            if (Tokens[TC].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x18);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not do NOT on {Tokens[TC].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 1;
+                        }
+                        break;
+                    case "and":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x1b);
+
+                        }
+
+                        else
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x1a);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                                bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not do AND on {Tokens[TC].Type} with {Tokens[TC + 2].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 3;
+                        }
+                        break;
+                    case "or":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x1d);
+
+                        }
+
+                        else
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x1c);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                                bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not do OR on {Tokens[TC].Type} with {Tokens[TC + 2].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 3;
+                        }
+                        break;
+                    case "xor":
+                        if (Tokens[TC].Type == TokenType.Opcode)
+                        {
+                            bytecode.Add(0x1f);
+
+                        }
+
+                        else
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)
+                            {
+                                bytecode.Add(0x1e);
+
+                                bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                                bytecode.Add(IdOfRegister(Tokens[TC + 2].Value));
+                            }
+
+                            else
+                            {
+                                Console.WriteLine($"[ERROR] can not do XOR on {Tokens[TC].Type} with {Tokens[TC + 2].Type} on line {Tokens[TC].LineFound}");
+                                Environment.Exit(1);
+                            }
+
+                            TC += 3;
+                        }
                         break;
                 }
             }

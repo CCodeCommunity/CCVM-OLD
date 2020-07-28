@@ -98,7 +98,7 @@ namespace CCVM
         {
             Console.WriteLine("dividing registers");
             byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) - GetRegister(program[PC++]));
+            SetRegister(accumulatorID, GetRegister(accumulatorID) / GetRegister(program[PC++]));
         }
 
         // [opcode(1) register(1) register(1)] 3b
@@ -106,7 +106,7 @@ namespace CCVM
         {
             Console.WriteLine("multiplying registers");
             byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) - GetRegister(program[PC++]));
+            SetRegister(accumulatorID, GetRegister(accumulatorID) * GetRegister(program[PC++]));
         }
 
         // [opcode(1) register(1)] 2b
@@ -152,14 +152,16 @@ namespace CCVM
         private void OpcodeSubStack()
         {
             Console.WriteLine("subtracting stack");
-            stack.Push(stack.Pop() - stack.Pop());
+            UInt32 first = stack.Pop();
+            stack.Push(stack.Pop() - first);
         }
 
         // [opcode(1)] 1b
         private void OpcodeDivStack()
         {
             Console.WriteLine("dividing stack");
-            stack.Push(stack.Pop() / stack.Pop());
+            UInt32 first = stack.Pop();
+            stack.Push(stack.Pop() / first);
         }
 
         // [opcode(1)] 1b
