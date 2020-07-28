@@ -153,27 +153,47 @@ namespace CCVM
 
         public void PrintStack()
         {
-            Console.WriteLine("stack: ");
-
-            foreach(UInt32 b in stack)
+            Console.WriteLine("stack:");
+            if (stack.Count == 0)
             {
-                Console.WriteLine(b);
-            } 
+                Console.WriteLine("   *empty*");
+            }
+
+            else
+            {
+                foreach (UInt32 b in stack)
+                {
+                    Console.WriteLine($"   {b}");
+                }
+            }
         }
 
         public void PrintRegs()
         {
-            Console.WriteLine($"A: {Regs[(byte)Registers.RegA]}");
-            Console.WriteLine($"B: {Regs[(byte)Registers.RegB]}");
-            Console.WriteLine($"C: {Regs[(byte)Registers.RegC]}");
-            Console.WriteLine($"D: {Regs[(byte)Registers.RegD]}");
+            Console.WriteLine("registers:");
+            Console.WriteLine($"   A: {Regs[(byte)Registers.RegA]}");
+            Console.WriteLine($"   B: {Regs[(byte)Registers.RegB]}");
+            Console.WriteLine($"   C: {Regs[(byte)Registers.RegC]}");
+            Console.WriteLine($"   D: {Regs[(byte)Registers.RegD]}");
         }
 
         public void PrintMem()
         {
-            for (int i = 0; i < 10; i++)
+            Console.WriteLine("Memory:");
+            string PerapsEnter;
+            for (int i = 0; i < 128; i++)
             {
-                Console.Write($"{memory[i]} ");
+                if (i % 16 == 0)
+                {
+                    PerapsEnter = "\n";
+                    if (i == 0)
+                    {
+                        PerapsEnter = "";
+                    }
+                    Console.Write($"{PerapsEnter}[0x{(i).ToString("X4")}]   ");
+                }
+
+                Console.Write($"{"0x" + memory[i].ToString("X2")} ");
             }
         }
 

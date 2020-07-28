@@ -8,6 +8,7 @@ namespace CCVM
     {
         static void Main(string[] args)    
         {
+            ArgParser.Parse(args);
             // check if an executable was given
             if (args.Length <= 0)
             {
@@ -27,16 +28,18 @@ namespace CCVM
                 CCVM.Initialize(1000);
 
                 CCVM.Run();
-                /*
-                Console.WriteLine("");
-                CCVM.PrintStack();
 
-                Console.WriteLine("");
-                CCVM.PrintRegs();
+                if (ArgParser.Option("-d") || ArgParser.Option("--debug"))
+                {
+                    Console.WriteLine("");
+                    CCVM.PrintStack();
 
-                Console.WriteLine("");
-                CCVM.PrintMem();
-                */
+                    Console.WriteLine("");
+                    CCVM.PrintRegs();
+
+                    Console.WriteLine("");
+                    CCVM.PrintMem();
+                }
             }
             
             // assemble the cc assembly
