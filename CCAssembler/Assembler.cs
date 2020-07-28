@@ -51,7 +51,7 @@ namespace CCVM.CCAssembler
         private bool CommentMode = false;
         public void LoadAssembly(string assembly)
         {
-            Assembly = assembly;
+            Assembly = assembly.Replace("\t", "").Replace("\r","").Replace("\n\n", "\n");
         }
 
         public void Lex()
