@@ -8,7 +8,6 @@ namespace CCVM
     class ArgParser
     {
         private static List<string> options = new List<string>();
-
         public static void Parse(string[] args)
         {
             foreach (string arg in args)

@@ -52,7 +52,7 @@ namespace CCVM
                 Assembler assembler = new Assembler();
                 assembler.LoadAssembly(content);
                 assembler.Lex();
-                assembler.BuildHeader();
+                
                 assembler.GenerateCode(args[0].Split(".")[0] + ".ccb");
                 Console.WriteLine("Done!");
             }

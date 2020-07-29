@@ -189,5 +189,26 @@ namespace CCVM
                     break;
             }
         }
+
+        // [opcode(1) address(4)] 5b
+        private void OpcodeJmpAbs()
+        {
+            Int32 Address = (Int32)Fetch32();
+            if (Address < 0) // overflow happened
+            {
+                Console.WriteLine("[ERROR] overflow happened due to jumping to an position in the program that doesnt fit in int32");
+                Environment.Exit(1);
+            }
+
+            PC = Address;
+        }
+
+        // [opcode(1) offset(4)] 5b
+        private void OpcodeJmpRel()
+        {
+            Int32 Address = (Int32)Fetch32();
+            PC += Address - 5;
+            Console.WriteLine($"jumping to {PC}");
+        }
     }
 }
