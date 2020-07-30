@@ -111,7 +111,13 @@ namespace CCVM.CCAssembler
                     CurrTok.Value += CurrChar;
                 }
 
-                else if (Char.IsDigit(CurrChar))
+                else if (CurrChar == '-')
+                {
+                    CurrTok.Type = TokenType.Literal;
+                    CurrTok.Value += CurrChar;
+                }
+
+                else if (Char.IsDigit(CurrChar) || CurrTok.Type == TokenType.Literal)
                 {
                     if (CurrTok.Type != TokenType.Address)
                         CurrTok.Type = TokenType.Literal;
@@ -497,6 +503,27 @@ namespace CCVM.CCAssembler
                         break;
                     case "syscall":
                         bytecode.Add(0xff);
+                        break;
+                    case "jmpa":
+                        bytecode.Add(0x20);
+                        TokenAssert(TokenType.Literal, Tokens[TC]);
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                            bytecode.AddRange(address);
+                        }
+                        TC += 1;
+                        break;
+                    case "jmpr":
+                        bytecode.Add(0x21);
+                        TokenAssert(TokenType.Literal, Tokens[TC]);
+
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                            bytecode.AddRange(address);
+                        }
+                        TC += 1;
                         break;
                 }
             }

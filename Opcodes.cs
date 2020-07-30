@@ -208,7 +208,6 @@ namespace CCVM
         {
             Int32 Address = (Int32)Fetch32();
             PC += Address - 5;
-            Console.WriteLine($"jumping to {PC}");
         }
     }
 }
