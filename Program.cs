@@ -39,6 +39,9 @@ namespace CCVM
 
                     Console.WriteLine("");
                     CCVM.PrintMem();
+
+                    Console.WriteLine("");
+                    CCVM.PrintFlags();
                 }
             }
             

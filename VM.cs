@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 
@@ -7,7 +8,7 @@ namespace CCVM
     sealed partial class VM
     {
         private enum Registers
-        { 
+        {
             RegA, RegB, RegC, RegD
         }
 
@@ -15,14 +16,11 @@ namespace CCVM
         private Stack<UInt32> stack = new Stack<UInt32>();
         private UInt32[] memory;
 
-        private UInt32[] Regs = {0, 0, 0, 0}; 
-
-        private byte exit = 0;
-
+        private UInt32[] Regs = { 0, 0, 0, 0 };
         private Int32 PC = 0; // program counter
 
         private byte instruction;
-
+        private BitArray flags = new BitArray( 6 );
         private UInt32 Fetch32()
         {
             UInt32 V = 0;
@@ -203,10 +201,23 @@ namespace CCVM
             }
         }
 
+        public void PrintFlags()
+        {
+            string[] flagNames = { "equal:\t", "not equal:\t", "greater:\t", "smaller:\t", "overflow:\t", "stop:\t" };
+            Console.WriteLine("\nflags: ");
+            byte i = 0;
+            foreach (bool flag in flags)
+            {
+                Console.WriteLine($"   {flagNames[i++]}{flag}");
+            }
+        }
+
         public void LoadProgram(byte[] program)
         {
             this.program = program;
         }
+
+        
 
         public void Initialize(UInt32 memSize)
         {
@@ -216,7 +227,7 @@ namespace CCVM
 
         public void Run()
         {
-            while(exit == 0)
+            while(!flags[5])
             {
                 Fetch();
                 Execute();

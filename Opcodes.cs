@@ -9,7 +9,7 @@ namespace CCVM
         // [opcode(1)]
         private void OpcodeExit()
         {
-            exit = 1;
+            flags[5] = true;
             PC++;
         }
 
@@ -208,6 +208,11 @@ namespace CCVM
         {
             Int32 Address = (Int32)Fetch32();
             PC += Address - 5;
+        }
+
+        private void OpcodeResetFlags()
+        {
+
         }
     }
 }
