@@ -20,7 +20,7 @@ namespace CCVM
         private Int32 PC = 0; // program counter
 
         private byte instruction;
-        private BitArray flags = new BitArray( 6 );
+        private BitArray flags = new BitArray( 7 );
         private UInt32 Fetch32()
         {
             UInt32 V = 0;
@@ -149,6 +149,9 @@ namespace CCVM
                 case 0x21:
                     OpcodeJmpRel();
                     break;
+                case 0x40:
+                    OpcodeResetFlags();
+                    break;
                 case 0xff:
                     OpcodeSyscall();
                     break;
@@ -203,7 +206,7 @@ namespace CCVM
 
         public void PrintFlags()
         {
-            string[] flagNames = { "equal:\t", "not equal:\t", "greater:\t", "smaller:\t", "overflow:\t", "stop:\t" };
+            string[] flagNames = { "equal:\t", "not equal:\t", "greater:\t", "smaller:\t", "overflow:\t", "stop:\t", "zero:\t" };
             Console.WriteLine("\nflags: ");
             byte i = 0;
             foreach (bool flag in flags)

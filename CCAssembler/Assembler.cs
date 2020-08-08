@@ -525,6 +525,9 @@ namespace CCVM.CCAssembler
                         }
                         TC += 1;
                         break;
+                    case "frs":
+                        bytecode.Add(0x40);
+                        break;
                 }
             }
 

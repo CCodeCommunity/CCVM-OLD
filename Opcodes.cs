@@ -86,7 +86,14 @@ namespace CCVM
         private void OpcodeSubReg()
         {
             byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) - GetRegister(program[PC++]));
+            UInt32 a = GetRegister(accumulatorID);
+            UInt32 b = GetRegister(program[PC++]);
+            SetRegister(accumulatorID, a - b);
+
+            if (a < UInt32.MinValue + b)
+            {
+                flags[4] = true;
+            }
         }
 
         // [opcode(1) register(1) register(1)] 3b
@@ -221,10 +228,9 @@ namespace CCVM
         // [opcode(1)] 1b
         private void OpcodeResetFlags()
         {
-            UInt16 i = 0;
-            foreach (bool flag in flags)
+            for (UInt16 i = 0; i < flags.Length - 1; i++)
             {
-                flags[i++] = false;
+                flags[i] = false;
             }
         }
     }
