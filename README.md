@@ -1,7 +1,9 @@
 # CCVM
 a virtual machine designed for the CC
 
-#### V1.0.0 to do list:  ![50%](https://progress-bar.dev/30)
+![version logo](https://media.discordapp.net/attachments/664213511554990143/742043367902281798/unknown.png)
+
+#### V1.0.0 to do list:  ![40%](https://progress-bar.dev/40)
 - [X] Add JMP instructions to VM
 - [X] Add JMP to assembler
 - [X] Signed offset support for assembler
@@ -11,4 +13,4 @@ a virtual machine designed for the CC
 - [ ] Add definition support for assembler
 - [ ] Add header builder to assembler
 - [ ] Add header support for the VM
-- [ ] Version command
+- [X] Version command
