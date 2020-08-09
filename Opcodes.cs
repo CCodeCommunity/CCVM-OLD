@@ -100,14 +100,28 @@ namespace CCVM
         private void OpcodeDivReg()
         {
             byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) / GetRegister(program[PC++]));
+            UInt32 a = GetRegister(accumulatorID);
+            UInt32 b = GetRegister(program[PC++]);
+            SetRegister(accumulatorID, a / b);
+
+            if (a < UInt32.MinValue * b)
+            {
+                flags[4] = true;
+            }
         }
 
         // [opcode(1) register(1) register(1)] 3b
         private void OpcodeMulReg()
         {
             byte accumulatorID = program[PC++];
-            SetRegister(accumulatorID, GetRegister(accumulatorID) * GetRegister(program[PC++]));
+            UInt32 a = GetRegister(accumulatorID);
+            UInt32 b = GetRegister(program[PC++]);
+            SetRegister(accumulatorID, a * b);
+
+            if (a < UInt32.MaxValue / (UInt64)b)
+            {
+                flags[4] = true;
+            }
         }
 
         // [opcode(1) register(1)] 2b
