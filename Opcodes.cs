@@ -9,7 +9,7 @@ namespace CCVM
         // [opcode(1)]
         private void OpcodeExit()
         {
-            flags[5] = true;
+            flags[6] = true;
             
             PC++;
         }
@@ -78,7 +78,7 @@ namespace CCVM
 
             if (a > UInt32.MaxValue - b)
             {
-                flags[4] = true;
+                flags[5] = true;
             }
         }
 
@@ -92,7 +92,7 @@ namespace CCVM
 
             if (a < UInt32.MinValue + b)
             {
-                flags[4] = true;
+                flags[5] = true;
             }
         }
 
@@ -100,14 +100,7 @@ namespace CCVM
         private void OpcodeDivReg()
         {
             byte accumulatorID = program[PC++];
-            UInt32 a = GetRegister(accumulatorID);
-            UInt32 b = GetRegister(program[PC++]);
-            SetRegister(accumulatorID, a / b);
-
-            if (a < UInt32.MinValue * b)
-            {
-                flags[4] = true;
-            }
+            SetRegister(accumulatorID, GetRegister(accumulatorID) / GetRegister(program[PC++]));
         }
 
         // [opcode(1) register(1) register(1)] 3b
@@ -118,9 +111,9 @@ namespace CCVM
             UInt32 b = GetRegister(program[PC++]);
             SetRegister(accumulatorID, a * b);
 
-            if (a < UInt32.MaxValue / (UInt64)b)
+            if (a > UInt32.MaxValue / (UInt64)b)
             {
-                flags[4] = true;
+                flags[5] = true;
             }
         }
 
@@ -155,27 +148,46 @@ namespace CCVM
         // [opcode(1)] 1b
         private void OpcodeAddStack()
         {
-            stack.Push(stack.Pop() + stack.Pop());
+            UInt32 a = stack.Pop();
+            UInt32 b = stack.Pop();
+            stack.Push(a + b);
+
+            if (a > UInt32.MaxValue - b)
+            {
+                flags[5] = true;
+            }
         }
 
         // [opcode(1)] 1b
         private void OpcodeSubStack()
         {
-            UInt32 first = stack.Pop();
-            stack.Push(stack.Pop() - first);
+            UInt32 a = stack.Pop();
+            UInt32 b = stack.Pop();
+            stack.Push(a - b);
+
+            if (a < UInt32.MinValue + b)
+            {
+                flags[5] = true;
+            }
         }
 
         // [opcode(1)] 1b
         private void OpcodeDivStack()
         {
-            UInt32 first = stack.Pop();
-            stack.Push(stack.Pop() / first);
+            stack.Push(stack.Pop() / stack.Pop());
         }
 
         // [opcode(1)] 1b
         private void OpcodeMulStack()
         {
-            stack.Push(stack.Pop() * stack.Pop());
+            UInt32 a = stack.Pop();
+            UInt32 b = stack.Pop();
+            stack.Push(a * b);
+
+            if (a > UInt32.MaxValue / (UInt64)b)
+            {
+                flags[5] = true;
+            }
         }
 
         // [opcode(1)] 1b

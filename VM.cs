@@ -206,7 +206,7 @@ namespace CCVM
 
         public void PrintFlags()
         {
-            string[] flagNames = { "equal:\t", "not equal:\t", "greater:\t", "smaller:\t", "overflow:\t", "stop:\t", "zero:\t" };
+            string[] flagNames = { "equal:\t", "not equal:\t", "greater:\t", "smaller:\t", "zero:\t", "overflow:\t", "stop:\t" };
             Console.WriteLine("\nflags: ");
             byte i = 0;
             foreach (bool flag in flags)
@@ -220,8 +220,6 @@ namespace CCVM
             this.program = program;
         }
 
-        
-
         public void Initialize(UInt32 memSize)
         {
             memory = new UInt32[memSize];
@@ -230,7 +228,7 @@ namespace CCVM
 
         public void Run()
         {
-            while(!flags[5])
+            while(!flags[6])
             {
                 Fetch();
                 Execute();
