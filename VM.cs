@@ -158,6 +158,8 @@ namespace CCVM
                 case 0x32:
                     OpcodeCompareStackLitteral();
                     break;
+
+
                 case 0x40:
                     OpcodeResetFlags();
                     break;

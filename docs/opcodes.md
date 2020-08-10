@@ -82,7 +82,7 @@ OFF = offset
 | JMP     | 0x21   | Jump to relative position in program | OFF       |
 | CMP     | 0x30   | Compare 2 registers                  | REG, REG  |
 | CMP     | 0x31   | Compare register with literal        | REG, LIT  |
-| CMP     | 0x32   | Compare top stack item with literal  | REG       |
+| CMP     | 0x32   | Compare top stack item with literal  | LIT       |
 | FRS     | 0x40   | Reset all flags                      | -         |
 | SYSCALL | 0xFF   | Perform a syscall                    | -         |
 

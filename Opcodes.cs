@@ -317,7 +317,7 @@ namespace CCVM
         // [opcode(1) literal(4)] 5b
         private void OpcodeCompareStackLitteral()
         {
-            UInt32 a = stack.Pop();
+            UInt32 a = stack.Peek();
             UInt32 b = Fetch32();
 
             if (a == b)
@@ -338,6 +338,15 @@ namespace CCVM
             if (a < b)
             {
                 flags[3] = true;
+            }
+        }
+
+        // [opcode(1) position(4)] 5b
+        private void OpcodeJumpIfFlag(byte flagID)
+        {
+            if (flags[flagID])
+            {
+                OpcodeJmpAbs();
             }
         }
     }

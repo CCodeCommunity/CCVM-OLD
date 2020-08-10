@@ -528,6 +528,49 @@ namespace CCVM.CCAssembler
                     case "frs":
                         bytecode.Add(0x40);
                         break;
+                    case "cmp":
+                        if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Register)//16
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            bytecode.Add(0x30);
+                            bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                            bytecode.Add(IdOfRegister(Tokens[TC+2].Value));
+                            TC += 3;
+                        }
+
+                        else if (Tokens[TC].Type == TokenType.Register && Tokens[TC + 2].Type == TokenType.Literal)
+                        {
+                            TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+                            bytecode.Add(0x31);
+
+                            bytecode.Add(IdOfRegister(Tokens[TC].Value));
+
+                            byte[] literal = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC+2].Value));
+                            Array.Reverse(literal);
+                            bytecode.AddRange(literal);
+                            TC += 3;
+                        }
+
+                        else if (Tokens[TC].Type == TokenType.Literal)
+                        {
+                            bytecode.Add(0x32);
+
+                            byte[] literal = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(literal);
+                            bytecode.AddRange(literal);
+                            TC += 1;
+                        }
+
+                        else
+                        {
+                            if (Tokens[TC].Type == TokenType.Register)
+                                TokenAssert(TokenType.Comma, Tokens[TC + 1]);
+
+                            Console.WriteLine(Tokens[TC].Type != TokenType.Register ? $"[ERROR] can not have {Tokens[TC].Type} as first argument of cmp" : $"[ERROR] can not have {Tokens[TC+2].Type} as 2nd argument");
+                            Environment.Exit(1);
+                        }
+                        
+                        break;
                 }
             }
 
