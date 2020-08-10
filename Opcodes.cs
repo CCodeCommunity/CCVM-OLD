@@ -342,11 +342,30 @@ namespace CCVM
         }
 
         // [opcode(1) position(4)] 5b
-        private void OpcodeJumpIfFlag(byte flagID)
+        private void OpcodeJumpIfFlag_abs(byte flagID)
         {
             if (flags[flagID])
             {
                 OpcodeJmpAbs();
+            } 
+            
+            else
+            {
+                PC += 4;
+            }
+        }
+
+        // [opcode(1) position(4)] 5b
+        private void OpcodeJumpIfFlag_rel(byte flagID)
+        {
+            if (flags[flagID])
+            {
+                OpcodeJmpRel();
+            }
+
+            else
+            {
+                PC += 4;
             }
         }
     }

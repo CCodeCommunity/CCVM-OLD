@@ -571,6 +571,56 @@ namespace CCVM.CCAssembler
                         }
                         
                         break;
+                    case "je":
+                        bytecode.Add(0x33);
+                        TokenAssert(TokenType.Literal, Tokens[TC]);
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                            bytecode.AddRange(address);
+                        }
+                        TC += 1;
+                        break;
+                    case "jne":
+                        bytecode.Add(0x34);
+                        TokenAssert(TokenType.Literal, Tokens[TC]);
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                            bytecode.AddRange(address);
+                        }
+                        TC += 1;
+                        break;
+                    case "jg":
+                        bytecode.Add(0x35);
+                        TokenAssert(TokenType.Literal, Tokens[TC]);
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                            bytecode.AddRange(address);
+                        }
+                        TC += 1;
+                        break;
+                    case "js":
+                        bytecode.Add(0x36);
+                        TokenAssert(TokenType.Literal, Tokens[TC]);
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                            bytecode.AddRange(address);
+                        }
+                        TC += 1;
+                        break;
+                    case "jo":
+                        bytecode.Add(0x37);
+                        TokenAssert(TokenType.Literal, Tokens[TC]);
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                            bytecode.AddRange(address);
+                        }
+                        TC += 1;
+                        break;
                 }
             }
 

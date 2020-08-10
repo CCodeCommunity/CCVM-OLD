@@ -160,6 +160,25 @@ namespace CCVM
                     break;
 
 
+
+                case 0x33:
+                    OpcodeJumpIfFlag_abs(0);
+                    break;
+                case 0x34:
+                    OpcodeJumpIfFlag_abs(1);
+                    break;
+                case 0x35:
+                    OpcodeJumpIfFlag_abs(2);
+                    break;
+                case 0x36:
+                    OpcodeJumpIfFlag_abs(3);
+                    break;
+                case 0x37:
+                    OpcodeJumpIfFlag_abs(4);
+                    break;
+
+
+
                 case 0x40:
                     OpcodeResetFlags();
                     break;
