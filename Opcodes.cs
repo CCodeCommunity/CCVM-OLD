@@ -9,7 +9,7 @@ namespace CCVM
         // [opcode(1)]
         private void OpcodeExit()
         {
-            flags[6] = true;
+            flags[5] = true;
             
             PC++;
         }
@@ -78,7 +78,7 @@ namespace CCVM
 
             if (a > UInt32.MaxValue - b)
             {
-                flags[5] = true;
+                flags[4] = true;
             }
         }
 
@@ -92,7 +92,7 @@ namespace CCVM
 
             if (a < UInt32.MinValue + b)
             {
-                flags[5] = true;
+                flags[4] = true;
             }
         }
 
@@ -113,7 +113,7 @@ namespace CCVM
 
             if (a > UInt32.MaxValue / (UInt64)b)
             {
-                flags[5] = true;
+                flags[4] = true;
             }
         }
 
@@ -154,7 +154,7 @@ namespace CCVM
 
             if (a > UInt32.MaxValue - b)
             {
-                flags[5] = true;
+                flags[4] = true;
             }
         }
 
@@ -167,7 +167,7 @@ namespace CCVM
 
             if (a < UInt32.MinValue + b)
             {
-                flags[5] = true;
+                flags[4] = true;
             }
         }
 
@@ -186,7 +186,7 @@ namespace CCVM
 
             if (a > UInt32.MaxValue / (UInt64)b)
             {
-                flags[5] = true;
+                flags[4] = true;
             }
         }
 
@@ -257,6 +257,87 @@ namespace CCVM
             for (UInt16 i = 0; i < flags.Length - 1; i++)
             {
                 flags[i] = false;
+            }
+        }
+
+        // [opcode(1) register(1) register(1)] 3b
+        private void OpcodeCompareRegisters()
+        {
+            UInt32 a = GetRegister(program[PC++]);
+            UInt32 b = GetRegister(program[PC++]);
+
+            if (a == b)
+            {
+                flags[0] = true;
+            }
+            
+            if (a != b)
+            {
+                flags[1] = true;
+            }
+            
+            if (a > b)
+            {
+                flags[2] = true;
+            }
+            
+            if (a < b)
+            {
+                flags[3] = true;
+            }
+        }
+
+        // [opcode(1) register(1) literal(4)] 6b
+        private void OpcodeCompareRegistersLiteral()
+        {
+            UInt32 a = GetRegister(program[PC++]);
+            UInt32 b = Fetch32();
+
+            if (a == b)
+            {
+                flags[0] = true;
+            }
+
+            if (a != b)
+            {
+                flags[1] = true;
+            }
+
+            if (a > b)
+            {
+                flags[2] = true;
+            }
+
+            if (a < b)
+            {
+                flags[3] = true;
+            }
+        }
+
+        // [opcode(1) literal(4)] 5b
+        private void OpcodeCompareStackLitteral()
+        {
+            UInt32 a = stack.Pop();
+            UInt32 b = Fetch32();
+
+            if (a == b)
+            {
+                flags[0] = true;
+            }
+
+            if (a != b)
+            {
+                flags[1] = true;
+            }
+
+            if (a > b)
+            {
+                flags[2] = true;
+            }
+
+            if (a < b)
+            {
+                flags[3] = true;
             }
         }
     }

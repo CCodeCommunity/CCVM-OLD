@@ -80,6 +80,9 @@ OFF = offset
 | XOR     | 0x1F   | Logical XOR on top 2 stack items     | -         |
 | JMP     | 0x20   | Jump to absolute position in program | ADD       |
 | JMP     | 0x21   | Jump to relative position in program | OFF       |
+| CMP     | 0x30   | Compare 2 registers                  | REG, REG  |
+| CMP     | 0x31   | Compare register with literal        | REG, LIT  |
+| CMP     | 0x32   | Compare top stack item with literal  | REG       |
 | FRS     | 0x40   | Reset all flags                      | -         |
 | SYSCALL | 0xFF   | Perform a syscall                    | -         |
 
