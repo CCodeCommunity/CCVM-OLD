@@ -23,10 +23,14 @@ namespace CCVM.CCAssembler
             public string Value = "";
             public TokenType Type = TokenType.Undefined;
             public int LineFound = 0;
+            public uint ByteIndex = 0;
 
             public void Print()
             {
-                Console.WriteLine($"Token[type={Type} value={Value}]");
+                if (ByteIndex == 0)
+                    Console.WriteLine($"Token[type={Type} Value={Value}]");
+                else
+                    Console.WriteLine($"Token[type={Type} Value={Value} ByteIndex={ByteIndex}]");
             }
 
             public Token Clone()
@@ -35,6 +39,7 @@ namespace CCVM.CCAssembler
                 ret.Value = Value;
                 ret.Type = Type;
                 ret.LineFound = LineFound;
+                ret.ByteIndex = ByteIndex;
                 return ret;
             }
 
@@ -42,6 +47,7 @@ namespace CCVM.CCAssembler
             {
                 Value = "";
                 Type = TokenType.Undefined;
+                ByteIndex = 0;
                 LineFound = 0;
             }
         }
@@ -49,6 +55,9 @@ namespace CCVM.CCAssembler
         private string Assembly;
         private List<Token> Tokens = new List<Token>();
         private bool CommentMode = false;
+        private bool LabelMode = false;
+        uint ByteIndexCounter = 0;
+
         public void LoadAssembly(string assembly)
         {
             Assembly = assembly.Replace("\t", "").Replace("\r","").Replace("\n\n", "\n");
@@ -90,7 +99,7 @@ namespace CCVM.CCAssembler
                     }
                 }
 
-                else if ((CurrChar == ' ' || CurrChar == '\n') && CurrTok.Value != "")
+                else if ((CurrChar == ' ' || CurrChar == '\n') && CurrTok.Value != "" && !LabelMode)
                 {
                     if (CurrTok.Type == TokenType.Opcode && (CurrTok.Value == "a" || CurrTok.Value == "b" || CurrTok.Value == "c" || CurrTok.Value == "d"))
                     {
@@ -105,8 +114,13 @@ namespace CCVM.CCAssembler
                 else if (CurrChar == ' ')
                     continue;
 
-                else if (Char.IsLetter(CurrChar) && (CurrTok.Type == TokenType.Undefined || CurrTok.Type == TokenType.Opcode))
+                else if (Char.IsLetter(CurrChar) && (CurrTok.Type == TokenType.Undefined || CurrTok.Type == TokenType.Opcode) && !LabelMode)
                 {
+                    if (CurrTok.Value.Length == 0)
+                    {
+                        ByteIndexCounter++;
+                    }
+
                     CurrTok.Type = TokenType.Opcode;
                     CurrTok.Value += CurrChar;
                 }
@@ -148,6 +162,28 @@ namespace CCVM.CCAssembler
                     CurrTok.Type = TokenType.Address;
                 }
 
+                else if (CurrChar == ':' || LabelMode)
+                {
+                    LabelMode = true;
+
+                    if (CurrChar == ' ' || CurrChar == '\n')
+                    {
+                        CurrTok.Type = TokenType.Label;
+                        CurrTok.LineFound = LineCount;
+                        CurrTok.ByteIndex = ByteIndexCounter;
+                        Tokens.Add(CurrTok.Clone());
+                        CurrTok.Reset();
+
+                        LabelMode = false;
+                    }
+
+                    else
+                    {
+                        CurrTok.Type = TokenType.Label;
+                        CurrTok.Value += CurrChar;
+                    }
+                }
+
                 else
                 {
                     Console.WriteLine($"[ERROR] unexpected symbol on line {LineCount}: {CurrChar}");
@@ -164,6 +200,48 @@ namespace CCVM.CCAssembler
                 CurrTok.LineFound = LineCount;
                 Tokens.Add(CurrTok.Clone());
                 CurrTok.Reset();
+            }
+            ParseLabels();
+            ReplaceLabels();
+        }
+
+        private Dictionary<string, uint> Labels = new Dictionary<string, uint>();
+        private void ParseLabels()
+        {
+            for (int i = 0; i < Tokens.Count; i++)
+            {
+                Token T = Tokens[i];
+                if (T.Type == TokenType.Label)
+                {
+                    Tokens.RemoveAt(i);
+                    Labels.Add(T.Value.Substring(1), T.ByteIndex);
+                }
+            }
+        }
+
+        private string[] ValidOpcodes = {
+            "stp", "psh", "pop", "dup", "mov", "add", "sub", "mul",
+            "div", "not", "and", "or", "xor", "cmp", "je", "jne",
+            "jg", "js", "jo", "frs", "syscall", "jmpa", "jmpr"
+        };
+
+        private void ReplaceLabels()
+        {
+            for (int i = 0; i < Tokens.Count; i++)
+            {
+                Token T = Tokens[i];
+                if (T.Type == TokenType.Opcode && Labels.ContainsKey(T.Value))
+                {
+                    if (Array.Exists<string>(ValidOpcodes, (string value) => { return value == T.Value; }))
+                    {
+                        Console.WriteLine($"[ERROR] unexisting label on line {T.LineFound}: {T.Value}");
+                        Environment.Exit(1);
+                    }else
+                    {
+                        Tokens[i].Type = TokenType.Literal;
+                        Tokens[i].Value = Labels[Tokens[i].Value].ToString();
+                    }
+                }
             }
         }
 

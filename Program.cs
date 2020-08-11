@@ -74,7 +74,9 @@ namespace CCVM
             assembler.LoadAssembly(content);
             assembler.Lex();
 
-            assembler.GenerateCode(args[0].Split(".")[0] + ".ccb");
+            assembler.PrintTokens();
+
+            // assembler.GenerateCode(args[0].Split(".")[0] + ".ccb");
             Console.WriteLine("Done!");
         }
 

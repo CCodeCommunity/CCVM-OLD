@@ -52,7 +52,7 @@ OFF = offset
 
 | Name    | Opcode | Description                              | Arguments |
 | ------- | ------ | ------------------------------------     | --------- |
-| STOP    | 0x00   | Exit the program and quit the VM         | -         |
+| STP     | 0x00   | Exit the program and quit the VM         | -         |
 | PSH     | 0x01   | Push a literal to the stack              | LIT       |
 | PSH     | 0x02   | Push a register to the stack             | REG       |
 | POP     | 0x03   | Pop the stack to a register              | REG       |

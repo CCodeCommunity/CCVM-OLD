@@ -11,7 +11,7 @@ a virtual machine designed for the CC
 - [X] Add conditionals
 - [X] Add conditionals to assembler
 - [ ] Add label support to assembler
-- [ ] Add def support for assembler
 - [ ] Add header builder to assembler
+- [ ] Add def support for assembler
 - [ ] Add header support for the VM
 - [X] Version command
