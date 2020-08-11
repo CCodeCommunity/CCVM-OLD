@@ -3,7 +3,7 @@ a virtual machine designed for the CC
 
 ![version logo](https://media.discordapp.net/attachments/664213511554990143/742043367902281798/unknown.png)
 
-#### V1.0.0 to do list:  ![73%](https://progress-bar.dev/73)
+#### V1.0.0 to do list:  ![91%](https://progress-bar.dev/91)
 - [X] Add JMP instructions to VM
 - [X] Add JMP to assembler
 - [X] Signed offset support for assembler
