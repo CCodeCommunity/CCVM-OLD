@@ -44,7 +44,6 @@ namespace CCVM
             VM CCVM = new VM();
 
             CCVM.LoadProgram(content);
-            CCVM.Initialize(1000);
 
             CCVM.Run();
 

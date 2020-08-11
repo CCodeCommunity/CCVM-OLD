@@ -21,6 +21,8 @@ namespace CCVM
 
         private byte instruction;
         private BitArray flags = new BitArray( 6 );
+        private int HeaderSize = 0;
+
         private UInt32 Fetch32()
         {
             UInt32 V = 0;
@@ -185,7 +187,32 @@ namespace CCVM
                 case 0xff:
                     OpcodeSyscall();
                     break;
+                default:
+                    Console.WriteLine($"[ERROR] unknown opcode: 0x{instruction.ToString("X2")}");
+                    Environment.Exit(1);
+                    break;
             }
+        }
+
+        private void ParseHeader()
+        {
+            UInt32 memsize = Fetch32();
+            Console.WriteLine($"memsize = {memsize} next instruction = {program[PC].ToString("X2")}");
+            Initialize(1000);
+
+            while (!EndOfHeader())
+            {
+                memory[PC-4] = program[PC++];
+                Console.WriteLine($"Loaded {program[PC + -1]}");
+                HeaderSize++;
+            }
+
+            PC += 4;
+        }
+
+        private bool EndOfHeader()
+        {
+            return program[PC] == 29 && program[PC+1] == 29 && program[PC+2] == 29 && program[PC+3] == 29;
         }
 
         public void PrintStack()
@@ -254,10 +281,12 @@ namespace CCVM
         {
             memory = new UInt32[memSize];
             Array.Fill<UInt32>(memory, 0x00);
+            HeaderSize = 8;
         }
 
         public void Run()
         {
+            ParseHeader();
             while(!flags[5])
             {
                 Fetch();

@@ -60,7 +60,7 @@ namespace CCVM.CCAssembler
 
         public void LoadAssembly(string assembly)
         {
-            Assembly = assembly.Replace("\t", "").Replace("\r","").Replace("\n\n", "\n");
+            Assembly = assembly.Replace("\t", "").Replace("\r","");
         }
 
         public void Lex()
@@ -194,6 +194,9 @@ namespace CCVM.CCAssembler
                     }
                 }
 
+                else if (CurrChar == '\n')
+                    continue;
+
                 else
                 {
                     Console.WriteLine($"[ERROR] unexpected symbol on line {LineCount}: {CurrChar}");
@@ -278,9 +281,22 @@ namespace CCVM.CCAssembler
             return (byte)(((byte)registerName[0]) - 97);
         }
 
+        public void GenerateHeader(ref List<byte> bytecode)
+        {
+            // memory reserving
+            byte[] memsize = { 0x00, 0x00, 0x0e, 0x38 };
+            bytecode.AddRange(memsize);
+
+            // header ending
+            byte[] ending = { 0x1d, 0x1d, 0x1d, 0x1d };
+            bytecode.AddRange(ending);
+        }
+
         public void GenerateCode(string FileName)
         {
             List<byte> bytecode = new List<byte>();
+            GenerateHeader(ref bytecode);
+            
 
             int TC = 0; // token counter
 

@@ -242,6 +242,7 @@ namespace CCVM
             }
 
             PC = Address;
+            PC += HeaderSize;
         }
 
         // [opcode(1) offset(4)] 5b
