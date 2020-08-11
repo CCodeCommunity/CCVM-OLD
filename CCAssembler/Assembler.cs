@@ -93,6 +93,10 @@ namespace CCVM.CCAssembler
                         {
                             CurrTok.Type = TokenType.Register;
                         }
+
+                        if (CurrTok.Type == TokenType.Literal)
+                            ByteIndexCounter += 4;
+
                         CurrTok.LineFound = LineCount;
                         Tokens.Add(CurrTok.Clone());
                         CurrTok.Reset();
@@ -105,21 +109,25 @@ namespace CCVM.CCAssembler
                     {
                         CurrTok.Type = TokenType.Register;
                     }
+
+                    if (CurrTok.Type == TokenType.Literal)
+                        ByteIndexCounter += 4;
+
                     CurrTok.LineFound = LineCount;
                     Tokens.Add(CurrTok.Clone());
                     CurrTok.Reset();
+
                     continue;
                 }
 
-                else if (CurrChar == ' ')
+                else if (CurrChar == ' ' && !LabelMode)
                     continue;
 
                 else if (Char.IsLetter(CurrChar) && (CurrTok.Type == TokenType.Undefined || CurrTok.Type == TokenType.Opcode) && !LabelMode)
                 {
+
                     if (CurrTok.Value.Length == 0)
-                    {
                         ByteIndexCounter++;
-                    }
 
                     CurrTok.Type = TokenType.Opcode;
                     CurrTok.Value += CurrChar;
@@ -159,6 +167,8 @@ namespace CCVM.CCAssembler
 
                 else if (CurrChar == '&')
                 {
+                    if (CurrTok.Value.Length == 0)
+                        ByteIndexCounter += 4;
                     CurrTok.Type = TokenType.Address;
                 }
 
