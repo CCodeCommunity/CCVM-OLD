@@ -3,7 +3,7 @@ a virtual machine designed for the CC
 
 ![version logo](https://media.discordapp.net/attachments/664213511554990143/742043367902281798/unknown.png)
 
-#### V1.0.0 to do list:  ![91%](https://progress-bar.dev/91)
+#### V1.0.0 to do list:  ![100%](https://progress-bar.dev/100)
 - [X] Add JMP instructions to VM
 - [X] Add JMP to assembler
 - [X] Signed offset support for assembler
@@ -13,5 +13,5 @@ a virtual machine designed for the CC
 - [X] Add label support to assembler
 - [X] Add header support for the VM
 - [X] Add header builder to assembler
-- [ ] Add def support for assembler
+- [X] Add def support for assembler
 - [X] Version command
