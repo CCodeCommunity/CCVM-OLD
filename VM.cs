@@ -197,13 +197,11 @@ namespace CCVM
         private void ParseHeader()
         {
             UInt32 memsize = Fetch32();
-            Console.WriteLine($"memsize = {memsize} next instruction = {program[PC].ToString("X2")}");
             Initialize(1000);
 
             while (!EndOfHeader())
             {
                 memory[PC-4] = program[PC++];
-                Console.WriteLine($"Loaded {program[PC + -1]}");
                 HeaderSize++;
             }
 

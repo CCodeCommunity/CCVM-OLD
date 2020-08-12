@@ -15,6 +15,7 @@ namespace CCVM.CCAssembler
             Register,
             Address,
             Comma,
+            String,
             Undefined
         }
         
@@ -56,6 +57,7 @@ namespace CCVM.CCAssembler
         private List<Token> Tokens = new List<Token>();
         private bool CommentMode = false;
         private bool LabelMode = false;
+        private bool StringMode = false;
         uint ByteIndexCounter = 0;
 
         public void LoadAssembly(string assembly)
@@ -84,6 +86,24 @@ namespace CCVM.CCAssembler
                     continue;
                 }
 
+                if (StringMode)
+                {
+                    if (CurrChar == '\"')
+                    {
+                        StringMode = false;
+                        if (CurrTok.Value != "")
+                        {
+                            CurrTok.LineFound = LineCount;
+                            Tokens.Add(CurrTok.Clone());
+                            CurrTok.Reset();
+                        }
+                    }
+
+                    else
+                        CurrTok.Value += CurrChar;
+                    continue;
+                }
+
                 if (CurrChar == ';')
                 {
                     CommentMode = true;
@@ -101,6 +121,13 @@ namespace CCVM.CCAssembler
                         Tokens.Add(CurrTok.Clone());
                         CurrTok.Reset();
                     }
+                }
+
+                else if (CurrChar == '\"')
+                {
+                    StringMode = true;
+                    CurrTok.Type = TokenType.String;
+                    continue;
                 }
 
                 else if ((CurrChar == ' ' || CurrChar == '\n') && CurrTok.Value != "" && !LabelMode)
@@ -215,7 +242,9 @@ namespace CCVM.CCAssembler
                 CurrTok.Reset();
             }
             ParseLabels();
+            ParseDefs();
             ReplaceLabels();
+            
         }
 
         private Dictionary<string, uint> Labels = new Dictionary<string, uint>();
@@ -238,6 +267,27 @@ namespace CCVM.CCAssembler
             "jg", "js", "jo", "frs", "syscall", "jmpa", "jmpr"
         };
 
+        private Dictionary<String, (int, string)> defintions = new Dictionary<String, (int, string)>();
+        private void ParseDefs()
+        {
+            int currPointer = 0;
+            for (int i = 0; i < Tokens.Count; i++)
+            {
+                Token T = Tokens[i];
+                if (T.Type == TokenType.Opcode && T.Value == "def")
+                {
+                    TokenAssert(TokenType.Opcode, Tokens[i + 1]);
+                    TokenAssert(TokenType.String, Tokens[i + 2]);
+
+                    defintions.Add(Tokens[i + 1].Value, (currPointer, Tokens[i + 2].Value));
+                    currPointer += Tokens[i + 2].Value.Length;
+
+                    int indx = -1;
+                    Tokens.RemoveAll(T => { indx++;  return indx == i || indx == i + 1 || indx == i + 2; });
+                }
+            }
+        }
+
         private void ReplaceLabels()
         {
             for (int i = 0; i < Tokens.Count; i++)
@@ -253,6 +303,19 @@ namespace CCVM.CCAssembler
                     {
                         Tokens[i].Type = TokenType.Literal;
                         Tokens[i].Value = Labels[Tokens[i].Value].ToString();
+                    }
+                }
+
+                else if (T.Type == TokenType.Opcode && defintions.ContainsKey(T.Value))
+                {
+                    if (Array.Exists<string>(ValidOpcodes, (string value) => { return value == T.Value; }))
+                    {
+                        Console.WriteLine($"[ERROR] unexisting data pointer on line {T.LineFound}: {T.Value}");
+                        Environment.Exit(1);
+                    } else
+                    {
+                        Tokens[i].Type = TokenType.Literal;
+                        Tokens[i].Value = defintions[Tokens[i].Value].Item1.ToString();
                     }
                 }
             }
@@ -286,6 +349,15 @@ namespace CCVM.CCAssembler
             // memory reserving
             byte[] memsize = { 0x00, 0x00, 0x0e, 0x38 };
             bytecode.AddRange(memsize);
+
+            // generate headerbytes
+            foreach (var d in defintions)
+            {
+                foreach (char c in d.Value.Item2)
+                {
+                    bytecode.Add((byte)c);
+                }
+            }
 
             // header ending
             byte[] ending = { 0x1d, 0x1d, 0x1d, 0x1d };

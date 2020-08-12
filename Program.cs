@@ -73,7 +73,8 @@ namespace CCVM
             assembler.LoadAssembly(content);
             assembler.Lex();
 
-            //assembler.PrintTokens();
+            if (ArgParser.Option("-d") || ArgParser.Option("--debug"))
+                assembler.PrintTokens();
 
             assembler.GenerateCode(args[0].Split(".")[0] + ".ccb");
             Console.WriteLine("Done!");
