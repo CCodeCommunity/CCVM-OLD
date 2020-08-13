@@ -274,6 +274,7 @@ namespace CCVM.CCAssembler
             for (int i = 0; i < Tokens.Count; i++)
             {
                 Token T = Tokens[i];
+                
                 if (T.Type == TokenType.Opcode && T.Value == "def")
                 {
                     TokenAssert(TokenType.Opcode, Tokens[i + 1]);
@@ -284,6 +285,7 @@ namespace CCVM.CCAssembler
 
                     int indx = -1;
                     Tokens.RemoveAll(T => { indx++;  return indx == i || indx == i + 1 || indx == i + 2; });
+                    i--;
                 }
             }
         }

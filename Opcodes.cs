@@ -219,15 +219,34 @@ namespace CCVM
         {
             switch(GetRegister(0x00))
             {
-                case 0: // print
-                    UInt32 ptr = GetRegister(0x01);
-                    UInt32 len = GetRegister(0x02);
+                case 0x00:
+                    { // cprint
+                        UInt32 ptr = GetRegister(0x01);
+                        UInt32 len = GetRegister(0x02);
 
-                    for (int i = 0; i < len; i++)
-                    {
-                        Console.Write((char) memory[ptr+i]);
+                        for (int i = 0; i < len; i++)
+                        {
+                            Console.Write((char)memory[ptr + i]);
+                        }
+                        break;
                     }
-                    break;
+                case 0x01:
+                    { // cread
+                        UInt32 ptr = GetRegister(0x01);
+
+                        string input = Console.ReadLine();
+
+                        for (int i = 0; i < input.Length; i++)
+                        {
+                            memory[ptr + i] = input[i];
+                        }
+                        break;
+                    }
+                case 0x02:
+                    { // cclear
+                        Console.Clear();
+                        break;
+                    }
             }
         }
 
