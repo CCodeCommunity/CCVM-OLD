@@ -333,7 +333,16 @@ namespace CCVM.CCAssembler
         {
             if (Got.Type != expected)
             {
-                Console.WriteLine($"[ERROR] lexical error on line {Got.LineFound}: expected {expected}, but got {Got.Type}");
+                Console.WriteLine($"[ERROR] lexical error on line {Got.LineFound}: expected {expected}, but got {Got.Type}: ");
+
+                foreach (Token t in Tokens)
+                {
+                    if (t.LineFound == Got.LineFound)
+                    {
+                        Console.Write($"{t.Value} ");
+                    }
+                }
+
                 Environment.Exit(1);
             }
 
@@ -794,6 +803,28 @@ namespace CCVM.CCAssembler
                             byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
                             Array.Reverse(address);
                             bytecode.AddRange(address);
+                        }
+                        TC += 1;
+                        break;
+                    case "inc":
+                        bytecode.Add(0x50);
+                        if (Tokens[TC].Type == TokenType.Register)
+                            bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                        else
+                        {
+                            Console.WriteLine($"[ERROR] can inc expects register but got {Tokens[TC].Type} on line {Tokens[TC].LineFound}");
+                            Environment.Exit(1);
+                        }
+                        TC += 1;
+                        break;
+                    case "dec":
+                        bytecode.Add(0x51);
+                        if (Tokens[TC].Type == TokenType.Register)
+                            bytecode.Add(IdOfRegister(Tokens[TC].Value));
+                        else
+                        {
+                            Console.WriteLine($"[ERROR] can dec expects register but got {Tokens[TC].Type} on line {Tokens[TC].LineFound}");
+                            Environment.Exit(1);
                         }
                         TC += 1;
                         break;

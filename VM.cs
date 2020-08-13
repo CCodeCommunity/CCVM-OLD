@@ -184,6 +184,14 @@ namespace CCVM
                 case 0x40:
                     OpcodeResetFlags();
                     break;
+
+                case 0x50:
+                    OpcodeIncrementRegister();
+                    break;
+                case 0x51:
+                    OpcodeDecrementRegister();
+                    break;
+
                 case 0xff:
                     OpcodeSyscall();
                     break;

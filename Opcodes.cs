@@ -369,5 +369,25 @@ namespace CCVM
                 PC += 4;
             }
         }
+
+        private void OpcodeIncrementRegister()
+        {
+            byte id = program[PC++];
+            if (GetRegister(id) == uint.MaxValue)
+            {
+                flags[4] = true;
+            }
+            SetRegister(id,GetRegister(id)+1);
+        }
+
+        private void OpcodeDecrementRegister()
+        {
+            byte id = program[PC++];
+            if (GetRegister(id) == 0)
+            {
+                flags[4] = true;
+            }
+            SetRegister(id, GetRegister(id) - 1);
+        }
     }
 }
