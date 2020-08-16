@@ -16,8 +16,11 @@ namespace CCVM
         private Stack<UInt32> stack = new Stack<UInt32>();
         private UInt32[] memory;
 
+        
+
         private UInt32[] Regs = { 0, 0, 0, 0 };
         private Int32 PC = 0; // program counter
+        private int SBP = 0; // stack base pointer
 
         private byte instruction;
         private BitArray flags = new BitArray( 6 );

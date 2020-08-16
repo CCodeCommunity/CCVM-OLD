@@ -389,6 +389,7 @@ namespace CCVM
             }
         }
 
+        // [opcode(1) register(1)] 2b
         private void OpcodeIncrementRegister()
         {
             byte id = program[PC++];
@@ -399,6 +400,7 @@ namespace CCVM
             SetRegister(id,GetRegister(id)+1);
         }
 
+        // [opcode(1) register(1)] 2b
         private void OpcodeDecrementRegister()
         {
             byte id = program[PC++];
@@ -407,6 +409,35 @@ namespace CCVM
                 flags[4] = true;
             }
             SetRegister(id, GetRegister(id) - 1);
+        }
+
+        // [opcode(1) address(4)] 2b
+        private void OpcodeCall()
+        {
+            stack.Push(GetRegister(0));
+            stack.Push(GetRegister(1));
+            stack.Push(GetRegister(2));
+            stack.Push(GetRegister(3));
+            stack.Push((uint) PC);
+            SBP = stack.Count;
+            PC = (int)Fetch32();
+        }
+
+        // [opcode(1)] 1b
+        private void OpcodeRet()
+        {
+            while (SBP != stack.Count)
+            {
+                stack.Pop();
+            }
+
+            PC = (int)stack.Pop();
+            SetRegister(3, stack.Pop());
+            SetRegister(2, stack.Pop());
+            SetRegister(1, stack.Pop());
+            SetRegister(0, stack.Pop());
+
+            SBP = stack.Count;
         }
     }
 }
