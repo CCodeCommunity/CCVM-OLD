@@ -68,6 +68,7 @@ namespace CCVM
 
         private void Execute()
         {
+            Console.WriteLine(instruction);
             switch (instruction)
             {
                 case 0x00: 
@@ -193,6 +194,13 @@ namespace CCVM
                     break;
                 case 0x51:
                     OpcodeDecrementRegister();
+                    break;
+
+                case 0x60:
+                    OpcodeCall();
+                    break;
+                case 0x61:
+                    OpcodeRet();
                     break;
 
                 case 0xff:

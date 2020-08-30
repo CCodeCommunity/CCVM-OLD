@@ -253,15 +253,17 @@ namespace CCVM
         // [opcode(1) address(4)] 5b
         private void OpcodeJmpAbs()
         {
+            
             Int32 Address = (Int32)Fetch32();
+            Console.WriteLine($"jumping abs too {Address}");
             if (Address < 0) // overflow happened
             {
-                Console.WriteLine("[ERROR] overflow happened due to jumping to an position in the program that doesnt fit in int32");
                 Environment.Exit(1);
             }
 
             PC = Address;
             PC += HeaderSize;
+            PC--;
         }
 
         // [opcode(1) offset(4)] 5b

@@ -59,6 +59,7 @@ namespace CCVM.CCAssembler
         private bool LabelMode = false;
         private bool StringMode = false;
         uint ByteIndexCounter = 0;
+        private int ByteOffset = 0;
 
         public void LoadAssembly(string assembly)
         {
@@ -139,6 +140,12 @@ namespace CCVM.CCAssembler
 
                     if (CurrTok.Type == TokenType.Literal)
                         ByteIndexCounter += 4;
+
+                    if (CurrTok.Type == TokenType.Opcode && Array.IndexOf(ValidOpcodes, CurrTok.Value) < 0 && CurrTok.Value != "def" && Tokens[Tokens.Count-1].Value != "def")
+                    {
+                        Console.WriteLine(CurrTok.Value);
+                        ByteIndexCounter += 3;
+                    }
 
                     CurrTok.LineFound = LineCount;
                     Tokens.Add(CurrTok.Clone());
@@ -241,8 +248,9 @@ namespace CCVM.CCAssembler
                 Tokens.Add(CurrTok.Clone());
                 CurrTok.Reset();
             }
-            ParseLabels();
+
             ParseDefs();
+            ParseLabels();
             ReplaceLabels();
             
         }
@@ -281,6 +289,7 @@ namespace CCVM.CCAssembler
                     TokenAssert(TokenType.String, Tokens[i + 2]);
 
                     defintions.Add(Tokens[i + 1].Value, (currPointer, Tokens[i + 2].Value));
+                    ByteOffset += 2;
                     currPointer += Tokens[i + 2].Value.Length;
 
                     int indx = -1;
@@ -304,7 +313,8 @@ namespace CCVM.CCAssembler
                     }else
                     {
                         Tokens[i].Type = TokenType.Literal;
-                        Tokens[i].Value = Labels[Tokens[i].Value].ToString();
+                        Console.WriteLine($"{Tokens[i].Value} = {Labels[Tokens[i].Value] - ByteOffset + 1}");
+                        Tokens[i].Value = (Labels[Tokens[i].Value]-ByteOffset + 1).ToString();
                     }
                 }
 
@@ -829,6 +839,16 @@ namespace CCVM.CCAssembler
                             Environment.Exit(1);
                         }
                         TC += 1;
+                        break;
+                    case "ret":
+                        bytecode.Add(0x61);
+                        break;
+                    case "call":
+                        bytecode.Add(0x60);
+                        {
+                            byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
+                            Array.Reverse(address);
+                        }
                         break;
                 }
             }
