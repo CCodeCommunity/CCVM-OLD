@@ -255,7 +255,6 @@ namespace CCVM
         {
             
             Int32 Address = (Int32)Fetch32();
-            Console.WriteLine($"jumping abs too {Address}");
             if (Address < 0) // overflow happened
             {
                 Environment.Exit(1);
@@ -423,6 +422,7 @@ namespace CCVM
             stack.Push((uint) PC);
             SBP = stack.Count;
             PC = (int)Fetch32();
+            PC += HeaderSize;
         }
 
         // [opcode(1)] 1b

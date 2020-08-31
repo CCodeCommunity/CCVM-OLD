@@ -68,7 +68,6 @@ namespace CCVM
 
         private void Execute()
         {
-            Console.WriteLine(instruction);
             switch (instruction)
             {
                 case 0x00: 

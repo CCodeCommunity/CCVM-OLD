@@ -143,7 +143,6 @@ namespace CCVM.CCAssembler
 
                     if (CurrTok.Type == TokenType.Opcode && Array.IndexOf(ValidOpcodes, CurrTok.Value) < 0 && CurrTok.Value != "def" && Tokens[Tokens.Count-1].Value != "def")
                     {
-                        Console.WriteLine(CurrTok.Value);
                         ByteIndexCounter += 3;
                     }
 
@@ -272,7 +271,7 @@ namespace CCVM.CCAssembler
         private string[] ValidOpcodes = {
             "stp", "psh", "pop", "dup", "mov", "add", "sub", "mul",
             "div", "not", "and", "or", "xor", "cmp", "je", "jne",
-            "jg", "js", "jo", "frs", "syscall", "jmpa", "jmpr"
+            "jg", "js", "jo", "frs", "syscall", "jmpa", "jmpr", "ret", "call"
         };
 
         private Dictionary<String, (int, string)> defintions = new Dictionary<String, (int, string)>();
@@ -313,7 +312,6 @@ namespace CCVM.CCAssembler
                     }else
                     {
                         Tokens[i].Type = TokenType.Literal;
-                        Console.WriteLine($"{Tokens[i].Value} = {Labels[Tokens[i].Value] - ByteOffset + 1}");
                         Tokens[i].Value = (Labels[Tokens[i].Value]-ByteOffset + 1).ToString();
                     }
                 }
@@ -848,7 +846,9 @@ namespace CCVM.CCAssembler
                         {
                             byte[] address = BitConverter.GetBytes(Convert.ToUInt32(Tokens[TC].Value));
                             Array.Reverse(address);
+                            bytecode.AddRange(address);
                         }
+                        TC += 1;
                         break;
                 }
             }
