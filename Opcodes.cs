@@ -421,9 +421,10 @@ namespace CCVM
             stack.Push(GetRegister(3));
             stack.Push((uint) PC);
             SBP = stack.Count;
-            PC = (int)Fetch32();
-            PC += HeaderSize;
-        }
+            PC = (int)Fetch32();            // set program counter to the address given
+            PC += HeaderSize;               // add the header offset so its actually at the right offset
+            PC--;                           // move back one scince the next itteration is going to happen before execution of the next command
+        }                                   // and will increase the program counter meaning its not at the right address anymore
 
         // [opcode(1)] 1b
         private void OpcodeRet()
