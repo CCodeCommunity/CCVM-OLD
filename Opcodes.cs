@@ -434,13 +434,14 @@ namespace CCVM
                 stack.Pop();
             }
 
-            PC = (int)stack.Pop() + 1;
+            PC = ((int)stack.Pop()) + 4;
             SetRegister(3, stack.Pop());
             SetRegister(2, stack.Pop());
             SetRegister(1, stack.Pop());
             SetRegister(0, stack.Pop());
 
             SBP = stack.Count;
+            //Console.WriteLine($"returned too {PC}");
         }
     }
 }

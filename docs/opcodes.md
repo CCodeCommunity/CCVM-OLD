@@ -87,7 +87,7 @@ OFF = offset
 | JNE     | 0x34   | Jump to address not if equal flag is set  | ADD       |
 | JG      | 0x35   | Jump to address if greater flag is set    | ADD       |
 | JS      | 0x36   | Jump to address if smaller flag is set    | ADD       |
-| JO      | 0x37   | Jump to address if smaller flag is set    | ADD       |
+| JO      | 0x37   | Jump to address if overflw flag is set    | ADD       |
 | FRS     | 0x40   | Reset all flags                           | -         |
 | INC     | 0x50   | Increment register                        | REG       |
 | DEC     | 0x51   | Decrement register                        | REG       |
