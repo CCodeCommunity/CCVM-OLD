@@ -76,7 +76,11 @@ namespace CCVM
             if (ArgParser.Option("-d") || ArgParser.Option("--debug"))
                 assembler.PrintTokens();
 
-            assembler.GenerateCode(args[0].Split(".")[0] + ".ccb");
+            string[] parts = args[0].Replace("/", ".").Split(".");
+            List<string> pathName = new List<string>(args[0].Split("/"));
+            pathName.RemoveAt(pathName.Count - 1);
+            string finalPath = string.Join("/", pathName) + "/";
+            assembler.GenerateCode(finalPath + parts[parts.Length - 2] + ".ccb");
             Console.WriteLine("Done!");
         }
 

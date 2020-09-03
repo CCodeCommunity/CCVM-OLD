@@ -434,7 +434,7 @@ namespace CCVM
                 stack.Pop();
             }
 
-            PC = (int)stack.Pop();
+            PC = (int)stack.Pop() + 1;
             SetRegister(3, stack.Pop());
             SetRegister(2, stack.Pop());
             SetRegister(1, stack.Pop());
