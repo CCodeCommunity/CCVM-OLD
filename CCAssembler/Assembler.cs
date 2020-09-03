@@ -7,7 +7,7 @@ namespace CCVM.CCAssembler
 {
     sealed class Assembler
     {
-        private enum TokenType
+        public enum TokenType
         {
             Opcode,
             Literal,
@@ -19,7 +19,7 @@ namespace CCVM.CCAssembler
             Undefined
         }
         
-        private class Token
+        public class Token
         {
             public string Value = "";
             public TokenType Type = TokenType.Undefined;
@@ -60,10 +60,32 @@ namespace CCVM.CCAssembler
         private bool StringMode = false;
         uint ByteIndexCounter = 0;
         private int ByteOffset = 0;
+        private string path;
 
         public void LoadAssembly(string assembly)
         {
             Assembly = assembly.Replace("\t", "").Replace("\r","");
+        }
+
+        public void SetMainPath(string path) {
+            this.path = path;
+        }
+
+        public string HandleInports(string originalCode) {
+            string newCode = "";
+            bool CommentMode = false;
+            bool StringMode = false;
+            
+            for (int i = 0; i < path.Length; i++) {
+                char cc = originalCode[i];
+
+                if (cc == ';') {
+                    CommentMode = true;
+                    continue;    
+                }
+            }
+            Console.WriteLine(newCode);
+            return newCode;
         }
 
         public void Lex()
@@ -141,10 +163,13 @@ namespace CCVM.CCAssembler
                     if (CurrTok.Type == TokenType.Literal)
                         ByteIndexCounter += 4;
 
+
                     if (CurrTok.Type == TokenType.Opcode && Array.IndexOf(ValidOpcodes, CurrTok.Value) < 0 && CurrTok.Value != "def" && Tokens[Tokens.Count-1].Value != "def")
                     {
                         ByteIndexCounter += 3;
                     }
+
+                    
 
                     CurrTok.LineFound = LineCount;
                     Tokens.Add(CurrTok.Clone());
@@ -252,6 +277,10 @@ namespace CCVM.CCAssembler
             ParseLabels();
             ReplaceLabels();
             
+        }
+
+        public List<Token> GetTokens(){
+            return Tokens;
         }
 
         private Dictionary<string, uint> Labels = new Dictionary<string, uint>();
@@ -383,7 +412,7 @@ namespace CCVM.CCAssembler
             bytecode.AddRange(ending);
         }
 
-        public void GenerateCode(string FileName)
+        public List<byte> GenerateCode(string FileName = null)
         {
             List<byte> bytecode = new List<byte>();
             GenerateHeader(ref bytecode);
@@ -853,7 +882,11 @@ namespace CCVM.CCAssembler
                 }
             }
 
-            File.WriteAllBytes(FileName, bytecode.ToArray());
+            if (bytecode != null) {
+                File.WriteAllBytes(FileName, bytecode.ToArray());
+            }
+
+            return bytecode;
         }
     }
 }

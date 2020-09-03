@@ -1,0 +1,28 @@
+﻿<Properties StartupConfiguration="{29498602-D1BB-441E-9680-69C8F2305783}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CCAssembler/Assembler.cs">
+    <Files>
+      <File FileName="ArgParse.cs" Line="6" Column="15" />
+      <File FileName="CCAssembler/Assembler.cs" Line="12" Column="18" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="CCVM" expanded="True">
+            <Node name="CCVM" expanded="True">
+              <Node name="CCAssembler" expanded="True">
+                <Node name="Assembler.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.CCVM PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

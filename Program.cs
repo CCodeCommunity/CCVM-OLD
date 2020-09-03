@@ -65,21 +65,25 @@ namespace CCVM
 
         static void Assemble(string[] args)
         {
+            string[] parts = args[0].Replace("/", ".").Split(".");
+            List<string> pathName = new List<string>(args[0].Split("/"));
+            pathName.RemoveAt(pathName.Count - 1);
+            string finalPath = string.Join("/", pathName) + "/";
+
             Console.WriteLine("Assembling...");
 
             string content = FileParser.ParseString(args[0]);
-
             Assembler assembler = new Assembler();
+            
+            content = assembler.HandleInports(content);
+
+            assembler.SetMainPath(finalPath);
             assembler.LoadAssembly(content);
             assembler.Lex();
 
             if (ArgParser.Option("-d") || ArgParser.Option("--debug"))
                 assembler.PrintTokens();
 
-            string[] parts = args[0].Replace("/", ".").Split(".");
-            List<string> pathName = new List<string>(args[0].Split("/"));
-            pathName.RemoveAt(pathName.Count - 1);
-            string finalPath = string.Join("/", pathName) + "/";
             assembler.GenerateCode(finalPath + parts[parts.Length - 2] + ".ccb");
             Console.WriteLine("Done!");
         }

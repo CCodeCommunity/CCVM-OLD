@@ -3,4 +3,9 @@
   <PropertyGroup>
     <_LastSelectedProfileId>C:\Users\lucde\source\repos\CCVM\CCVM\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>main.cca</StartArguments>
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
 </Project>
