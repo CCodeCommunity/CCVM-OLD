@@ -88,7 +88,7 @@ namespace CCVM
         {
             if (Console.BufferWidth < 31)
             {
-                Console.WriteLine("\nCCVM V1.0.0");
+                Console.WriteLine("\nCCVM V1.1.0");
                 return;
             }
             string indent = new StringBuilder(Console.BufferWidth/2 - 13).AppendJoin(" ", new string[Console.BufferWidth / 2 - 12]).ToString();
