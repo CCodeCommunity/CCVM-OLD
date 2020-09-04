@@ -1,9 +1,5 @@
-def hw "hello world"
-
 import "IO.cca"
 
-mov a, hw
-mov b, 11
-call print
-
+mov a, 6966642
+call printNum 
 stp

@@ -24,7 +24,6 @@ namespace CCVM
                 return;
             }
 
-
             // run the cc binary
             if (args[0].EndsWith(".ccb") || args[0].EndsWith(".CCB"))
                 RunBinary(args);
@@ -40,12 +39,14 @@ namespace CCVM
 
         static void RunBinary(string[] args)
         {
+            DateTime start = DateTime.Now;
             byte[] content = FileParser.ParseBytes(args[0]);
             VM CCVM = new VM();
 
             CCVM.LoadProgram(content);
 
             CCVM.Run();
+            DateTime end = DateTime.Now;
 
             if (ArgParser.Option("-d") || ArgParser.Option("--debug"))
             {
@@ -61,10 +62,17 @@ namespace CCVM
                 Console.WriteLine("");
                 CCVM.PrintFlags();
             }
+
+            if (ArgParser.Option("-t") || ArgParser.Option("--time"))
+            {
+                Console.WriteLine("");
+                Console.WriteLine($"Execution took {(end - start).Milliseconds} ms");
+            }
         }
 
         static void Assemble(string[] args)
         {
+            DateTime start = DateTime.Now;
             string[] parts = args[0].Replace("/", ".").Split(".");
             List<string> pathName = new List<string>(args[0].Split("/"));
             pathName.RemoveAt(pathName.Count - 1);
@@ -73,7 +81,6 @@ namespace CCVM
                 finalPath = finalPath.Remove(0);
             }
             
-
             Console.WriteLine("Assembling...");
 
             string content = FileParser.ParseString(args[0]);
@@ -89,7 +96,7 @@ namespace CCVM
                 assembler.PrintTokens();
 
             assembler.GenerateCode(finalPath + parts[parts.Length - 2] + ".ccb");
-            Console.WriteLine("Done!");
+            Console.WriteLine($"Done, took {(DateTime.Now - start).Milliseconds} ms");
         }
 
         static void PrintVersion()
@@ -108,7 +115,7 @@ namespace CCVM
     \____/    |__|  \_| |__|
 
 +--------------------------+
-| CCVM V1.0.0              |
+| CCVM V1.1.0              |
 | developed by luke_       |
 | github.com/justlucdewit  |
 +--------------------------+";

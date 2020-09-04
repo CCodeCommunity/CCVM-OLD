@@ -1,18 +1,131 @@
 ; CCA Library for input/output functions
 ; written by Luke_ on 3 sep 2020
 
+; notes: 
+;   problem with mov reg reg
+;   problem with inc and dec
+;   problem with mov addr reg
+
+def charSpace " "
+
 jmpa GuardjghduiBUFIdshsdfio
     ; print function
     ; a = pointer to string
     ; b = length of string
     :print
-        mov c, b
-        breakpoint
+        psh b
+        psh a
+        pop b
+        pop c
+        mov a, 0
+        syscall
     ret
 
     ; clear function
     :clear
         mov a, 2
         syscall
+    ret
+
+    ; print number
+    ; a = number to print
+    :printNum
+        ; test if more then 1 digit
+        mov b, 10
+        frs
+        cmp a, b
+        js IOPrintNumOnlyOne
+
+        mov c, 10 ; division amount
+        mov d, 0  ; digit count
+        psh a     ; original number
+        pop b     ; current digit
+
+        frs
+        cmp b, c
+        js IOPrintNumMainPrintingLoop
+
+        ; loop to count number of digits
+        :IOPrintNumCountingLoop
+            div b, c
+            frs
+            cmp b, c
+            psh a
+            mov a, 1
+            add d, a
+            pop a
+        jg IOPrintNumCountingLoop
+        
+        :IOPrintNumMainPrintingLoop
+            ; get next base number
+            psh a
+            pop b
+            psh d
+
+            mov c, 10
+
+            ; get next digit
+            :IOPrintNumNumberCraftLoop
+                psh a
+                mov a, 1
+                sub d, a
+                pop a
+                frs
+                cmp d, 0
+                div b, c
+            jne IOPrintNumNumberCraftLoop
+
+            ; get rid of trailig digits
+            frs
+            cmp b, 10
+            js IOPrintNumRemoveTrailingNumbersAfter
+
+            :IOPrintNumRemoveTrailingNumbers
+                frs
+                sub b, c
+                cmp b, 10
+            jg IOPrintNumRemoveTrailingNumbers
+            :IOPrintNumRemoveTrailingNumbersAfter
+
+            ;convert number to ascii
+            psh a
+            mov a, 48
+            add b, a
+            pop a
+
+            mov &0, b ; todo: mount his to charSpace instead of &0 (cant do that now cuz its bugged)
+            psh a
+            mov a, 0
+            mov b, charSpace
+            mov c, 1
+            syscall
+            pop a
+            pop d
+            mov c, 1
+            sub d, c
+
+            frs
+            cmp d, 0
+        jne IOPrintNumMainPrintingLoop
+
+        frs
+        cmp a, 10
+        js IOPrintNumLastDigitAfter
+        
+        mov d, 10
+        :IOPrintNumLastDigit
+            sub a, d
+            frs
+            cmp a, 10
+        jg IOPrintNumLastDigit
+        :IOPrintNumOnlyOne
+        mov b, 48
+        add a, b
+        mov &0, a
+        mov a, 0
+        mov b, 0
+        mov c, 1
+        syscall
+        :IOPrintNumLastDigitAfter
     ret
 :GuardjghduiBUFIdshsdfio

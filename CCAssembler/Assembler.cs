@@ -561,7 +561,7 @@ namespace CCVM.CCAssembler
                             bytecode.AddRange(number);
                         }
 
-                        else if (Tokens[TC].Type == TokenType.Address && Tokens[TC + 2].Type == TokenType.Register)
+                        else if ((Tokens[TC].Type == TokenType.Address && Tokens[TC + 2].Type == TokenType.Register) || (Tokens[TC].Type == TokenType.Literal && Tokens[TC + 2].Type == TokenType.Register))
                         {
                             bytecode.Add(0x09);
 
