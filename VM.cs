@@ -203,6 +203,10 @@ namespace CCVM
                     OpcodeRet();
                     break;
 
+                case 0x70:
+                    OpcodeDebug();
+                    break;
+
                 case 0xff:
                     OpcodeSyscall();
                     break;

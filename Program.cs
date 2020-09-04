@@ -69,15 +69,19 @@ namespace CCVM
             List<string> pathName = new List<string>(args[0].Split("/"));
             pathName.RemoveAt(pathName.Count - 1);
             string finalPath = string.Join("/", pathName) + "/";
+            if (finalPath[0] == '/') {
+                finalPath = finalPath.Remove(0);
+            }
+            
 
             Console.WriteLine("Assembling...");
 
             string content = FileParser.ParseString(args[0]);
             Assembler assembler = new Assembler();
+            assembler.SetMainPath(finalPath);
             
             content = assembler.HandleInports(content);
 
-            assembler.SetMainPath(finalPath);
             assembler.LoadAssembly(content);
             assembler.Lex();
 

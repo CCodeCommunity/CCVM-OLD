@@ -1,0 +1,18 @@
+; CCA Library for input/output functions
+; written by Luke_ on 3 sep 2020
+
+jmpa GuardjghduiBUFIdshsdfio
+    ; print function
+    ; a = pointer to string
+    ; b = length of string
+    :print
+        mov c, b
+        breakpoint
+    ret
+
+    ; clear function
+    :clear
+        mov a, 2
+        syscall
+    ret
+:GuardjghduiBUFIdshsdfio

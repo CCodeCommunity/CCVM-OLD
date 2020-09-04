@@ -224,6 +224,8 @@ namespace CCVM
                         UInt32 ptr = GetRegister(0x01);
                         UInt32 len = GetRegister(0x02);
 
+                        Console.WriteLine($"printing pos {ptr} len {len}");
+
                         for (int i = 0; i < len; i++)
                         {
                             Console.Write((char)memory[ptr + i]);
@@ -442,6 +444,16 @@ namespace CCVM
 
             SBP = stack.Count;
             //Console.WriteLine($"returned too {PC}");
+        }
+
+        private void OpcodeDebug()
+        {   
+            Console.WriteLine("breakpoint encountered");
+            PrintStack();
+            PrintRegs();
+            PrintMem();
+            PrintFlags();
+            Environment.Exit(0);
         }
     }
 }

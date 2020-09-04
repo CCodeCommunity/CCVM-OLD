@@ -1,17 +1,17 @@
 ﻿<Properties StartupConfiguration="{29498602-D1BB-441E-9680-69C8F2305783}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="CCAssembler/Assembler.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="FileParser.cs">
     <Files>
       <File FileName="ArgParse.cs" Line="6" Column="15" />
-      <File FileName="CCAssembler/Assembler.cs" Line="12" Column="18" />
+      <File FileName="CCAssembler/Assembler.cs" Line="173" Column="15" />
+      <File FileName="FileParser.cs" Line="17" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="CCVM" expanded="True">
             <Node name="CCVM" expanded="True">
-              <Node name="CCAssembler" expanded="True">
-                <Node name="Assembler.cs" selected="True" />
-              </Node>
+              <Node name="CCAssembler" expanded="True" />
+              <Node name="FileParser.cs" selected="True" />
             </Node>
           </Node>
         </State>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using helpers;
 
 namespace CCVM.CCAssembler
 {
@@ -74,17 +75,77 @@ namespace CCVM.CCAssembler
         public string HandleInports(string originalCode) {
             string newCode = "";
             bool CommentMode = false;
-            bool StringMode = false;
+            byte StringMode = 0;
+            int line = 0;
             
-            for (int i = 0; i < path.Length; i++) {
+            for (int i = 0; i < originalCode.Length; i++) {
                 char cc = originalCode[i];
 
-                if (cc == ';') {
+                if (cc == '\n') {
+                    line++;
+                }
+
+                if (CommentMode) {
+                    if (cc == '\n') {
+                        newCode += cc;
+                        CommentMode = false;
+                        continue;
+                    }
+                }
+
+                else if (StringMode == 1) {
+                    newCode += cc;
+                    if (cc == '\'') {
+                        StringMode = 0;
+                    }
+                }
+
+                else if (StringMode == 2) {
+                    newCode += cc;
+                    if (cc == '\"') {
+                        StringMode = 0;
+                    }
+                }
+
+                else if (cc == ';') {
                     CommentMode = true;
-                    continue;    
+                }
+
+                else if (cc == '\'') {
+                    StringMode = 1;
+                }
+
+                else if (cc == '"') {
+                    StringMode = 2;
+                    newCode += cc;
+                }
+
+                else {
+                    if (helpers.helpers.matchesAt(originalCode, i, "import ")) {
+                        i += 7;
+
+                        cc = originalCode[i];
+                        char stringOpener = '\0';
+                        if (cc == '"' || cc == '\'') {
+                            stringOpener = cc;
+                        } else {
+                            Console.WriteLine($"[ERROR]: expected a string after import keyword at line {line}");
+                            Environment.Exit(1);
+                        }
+
+                        cc = originalCode[++i];
+                        string importName = "";
+                        while (originalCode[i] != stringOpener) {
+                            cc = originalCode[i++];
+                            importName += cc;
+                        }
+                        string moduleCode = FileParser.ParseString(path + importName);
+                        originalCode = originalCode.Insert(i+1, moduleCode);
+                    } else {
+                        newCode += cc;
+                    }
                 }
             }
-            Console.WriteLine(newCode);
             return newCode;
         }
 
@@ -300,7 +361,7 @@ namespace CCVM.CCAssembler
         private string[] ValidOpcodes = {
             "stp", "psh", "pop", "dup", "mov", "add", "sub", "mul",
             "div", "not", "and", "or", "xor", "cmp", "je", "jne",
-            "jg", "js", "jo", "frs", "syscall", "jmpa", "jmpr", "ret", "call"
+            "jg", "js", "jo", "frs", "syscall", "jmpa", "jmpr", "ret", "call", "breakpoint"
         };
 
         private Dictionary<String, (int, string)> defintions = new Dictionary<String, (int, string)>();
@@ -878,6 +939,9 @@ namespace CCVM.CCAssembler
                             bytecode.AddRange(address);
                         }
                         TC += 1;
+                        break;
+                    case "breakpoint":
+                        bytecode.Add(0x70);
                         break;
                 }
             }

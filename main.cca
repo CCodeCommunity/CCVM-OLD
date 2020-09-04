@@ -1,0 +1,9 @@
+def hw "hello world"
+
+import "IO.cca"
+
+mov a, hw
+mov b, 11
+call print
+
+stp
