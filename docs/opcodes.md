@@ -29,19 +29,10 @@ The bytes in a CCVM executable (.ccb file) can represent multiple things:
 
   If an ID is given that is higher then 0x03, the VM will crash.
 
-  
-
 - An address:
 
   An Address is a 4 byte number that points to somewhere in the VM memory, or the program data. It can be used to store data in RAM memory, or to jump to an absolute position in the program.
 
-  
-
-- An offset:
-
-  An offset is similar to an Address, but its signed and only used to jump in the program. Opposed to an address, an offset is for jumping to a **relative** position in the program data, instead of **absolute**.
-
-  
 
 ## CCVM instruction set
 
@@ -79,7 +70,6 @@ OFF = offset
 | XOR     | 0x1E   | Logical XOR on 2 registers                | REG, REG  |
 | XOR     | 0x1F   | Logical XOR on top 2 stack items          | -         |
 | JMP     | 0x20   | Jump to absolute position in program      | ADD       |
-| JMP     | 0x21   | Jump to relative position in program      | OFF       |
 | CMP     | 0x30   | Compare 2 registers                       | REG, REG  |
 | CMP     | 0x31   | Compare register with literal             | REG, LIT  |
 | CMP     | 0x32   | Compare top stack item with literal       | LIT       |
